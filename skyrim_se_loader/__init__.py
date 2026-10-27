@@ -4,7 +4,7 @@
 bl_info = {
     "name": "Skyrim SE Asset Loader",
     "author": "Sever Lanker / Grok Bot",
-    "version": (0, 7, 0),
+    "version": (0, 7, 1),
     "blender": (4, 0, 0),
     "location": "View3D > Sidebar > Skyrim SE",
     "description": (

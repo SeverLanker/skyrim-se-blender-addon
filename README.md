@@ -1,4 +1,4 @@
-# Skyrim SE Asset Loader（Blender 插件 v0.7.0）
+# Skyrim SE Asset Loader（Blender 插件 v0.7.1）
 
 在 Blender 中以较便捷方式加载《上古卷轴 5》Special Edition（含 AE）人物相关资源：
 
@@ -24,6 +24,12 @@
 
 ---
 
+
+## v0.7.1 手部姿态保留
+
+向已有 **XP32 / 目标骨架** 导入手等 NIF 部件时，不再被 PyNifly 改写已有手指/手掌/前臂姿态（修复求值后手形异常变大）。改动在 `importers/pynifly_bridge.py`：导入前快照 `matrix_basis`，结束后恢复；详见 [`CHANGELOG.md`](CHANGELOG.md) 与 [`skyrim_se_loader/HAND_FIX_1027.md`](skyrim_se_loader/HAND_FIX_1027.md)。
+
+**用法边界：** 只保护新导入。旧场景若姿态已被覆盖，请撤销或打开导入前存档，用未损坏骨架重新导入；不要只删除手模型再导。
 
 ## v0.7.0 新界面结构
 
@@ -63,7 +69,7 @@ Skyrim SE Loader        状态栏：PyNifly / BSArch / BodySlide / Data ✓✗ +
 
 **需配套 PyNifly localfix**：`io_scene_nifly-29.1.0-localfix-20261026-Windows.zip`（不打进本 zip；先装它再装 Loader）。
 
-限制：FaceTint 是柔光近似，头部整体偏暗；眼睛、头发显示与游戏有差异；STRINGS 本地化名字未接入（显示编号，用 EditorID 搜）；手掌比例未调；BSA 仍是整包解压（首次慢，有缓存）；已损坏的旧场景不会自动修复，请从干净存档重新导入。
+限制：FaceTint 是柔光近似，头部整体偏暗；眼睛、头发显示与游戏有差异；STRINGS 本地化名字未接入（显示编号，用 EditorID 搜）；BSA 仍是整包解压（首次慢，有缓存）；已损坏的旧场景不会自动修复，请从干净存档重新导入。部件导入改写已有手指姿态的问题见 **v0.7.1**。
 
 ## v0.6.0 NPC / 种族外观（esp + FaceGen）
 
@@ -88,7 +94,7 @@ Skyrim SE Loader        状态栏：PyNifly / BSArch / BodySlide / Data ✓✗ +
 
 - **jslot → Shape Keys**：先扩大滑条范围再写值，负值与 >1 的 morph 不再被钳制（详见 [`evidence/localfix-20261026/`](evidence/localfix-20261026/)）
 - **CharGen 头雕**：导入前请先选好身体正在用的目标骨架。头雕改写身体骨架 / 姿态的问题在 **外部 PyNifly** 修补版中处理——请额外安装 `io_scene_nifly-29.1.0-localfix-20261026-Windows.zip`（**不**包含在本仓库的 `skyrim_se_loader.zip` 内）。安装顺序：先 PyNifly 修补包，再本 Loader；启用后重启 Blender。已变形的旧场景请撤销或打开导入前存档再重新导入。
-- **仍未修复**：赋皮肤 DDS 对组材质会重建材质丢连线；`_msn` 法线转换；手部大小；完整捏脸/妆容还原
+- **仍未修复**：赋皮肤 DDS 对组材质会重建材质丢连线；完整捏脸/妆容还原（手部因部件导入被改写姿态 → 已在 **v0.7.1** 修复；`_msn`/FaceTint 等见 0.6.1）
 
 ---
 

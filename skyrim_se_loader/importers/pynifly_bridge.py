@@ -61,6 +61,10 @@ def import_nif(context, filepath: str, options: dict | None = None) -> ImportRes
     before = set(bpy.data.objects)
     props = getattr(context.scene, "skyrim_se_loader", None)
     target = props.target_armature if props else None
+    # NIF parts carry their own bone poses. Loading a part must not pose an
+    # existing character (notably XP32 fingers); HKX handles animation import.
+    target_pose = ({bone.name: bone.matrix_basis.copy()
+                    for bone in target.pose.bones} if target is not None else {})
     if target is not None:
         if context.mode != "OBJECT":
             bpy.ops.object.mode_set(mode="OBJECT")
@@ -79,6 +83,13 @@ def import_nif(context, filepath: str, options: dict | None = None) -> ImportRes
             return ImportResult(False, f"PyNifly NIF 导入失败: {exc}", backend="pynifly")
     except Exception as exc:  # noqa: BLE001
         return ImportResult(False, f"PyNifly NIF 导入失败: {exc}", backend="pynifly")
+    finally:
+        for name, basis in target_pose.items():
+            bone = target.pose.bones.get(name)
+            if bone is not None:
+                bone.matrix_basis = basis
+        if target_pose:
+            context.view_layer.update()
 
     if "FINISHED" not in result and "CANCELLED" not in result:
         # Some Blender versions return set; treat unknown as soft success if objects appeared
