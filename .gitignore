@@ -1,0 +1,6 @@
+evidence/
+*.bak/
+skyrim_se_loader.v0.2.0.bak/
+skyrim_se_loader.zip
+__pycache__/
+*.pyc
